@@ -1327,3 +1327,76 @@ p,
     min-height: 560px;
   }
 }
+
+.faq-page { max-width: 1120px; margin: 0 auto; }
+.faq-list { display: grid; gap: 0; border-top: 1px solid var(--line); }
+.faq-list article { display: grid; grid-template-columns: minmax(220px,.42fr) minmax(0,1fr); gap: clamp(24px,4vw,72px); padding: 34px 0; border-bottom: 1px solid var(--line); }
+.faq-list h2 { margin: 0; font-size: clamp(22px,2.4vw,34px); line-height: 1.08; font-weight: 620; letter-spacing: -.01em; }
+.faq-list p { margin: 0; color: var(--muted); font-size: 17px; line-height: 1.65; }
+@media (max-width: 760px) {
+  .faq-list article { grid-template-columns: 1fr; gap: 12px; padding: 28px 0; }
+}
+`n.production-photo-grid figcaption {
+  text-align: center;
+  margin-top: 12px;
+  color: var(--ink);
+  font-size: 14px;
+  font-weight: 760;
+  letter-spacing: .04em;
+  text-transform: none;
+}
+
+.production-page .production-group-copy {
+  grid-template-columns: minmax(0, 1fr);
+}
+.production-page .production-group-copy > span {
+  display: none;
+}
+.production-page .production-group-copy h2 {
+  white-space: nowrap;
+}
+@media (max-width: 760px) {
+  .production-page .production-group-copy h2 { white-space: normal; }
+}
+
+.factory-overview .plain-page-title {
+  font-size: clamp(42px, 5.4vw, 68px);
+  line-height: 1.02;
+}
+.factory-overview-grid {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: clamp(28px, 3vw, 42px);
+}
+.factory-overview-grid img {
+  aspect-ratio: 4 / 3;
+  object-fit: cover;
+}
+.factory-overview-grid figcaption {
+  padding: 14px 0 0;
+}
+.factory-overview-grid figcaption span {
+  font-size: 10px;
+  letter-spacing: .08em;
+}
+.factory-overview-grid figcaption h2 {
+  margin-top: 4px;
+  font-size: clamp(20px, 2vw, 25px);
+  line-height: 1.08;
+}
+@media (max-width: 900px) {
+  .factory-overview-grid { grid-template-columns: 1fr; }
+  .factory-overview-grid img { aspect-ratio: 16 / 10; }
+}
+
+.production-page .plain-page-title {
+  max-width: none;
+  white-space: nowrap;
+  font-size: clamp(38px, 5.4vw, 62px);
+  line-height: 1;
+}
+@media (max-width: 900px) {
+  .production-page .plain-page-title {
+    white-space: normal;
+    font-size: clamp(38px, 10vw, 58px);
+  }
+}
