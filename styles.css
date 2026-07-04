@@ -1,3 +1,4 @@
+@import url('https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@600;700&display=swap');
 :root {
   --ink: #17191a;
   --muted: #6d7275;
@@ -1399,4 +1400,97 @@ p,
     white-space: normal;
     font-size: clamp(38px, 10vw, 58px);
   }
+}
+
+/* Typography refactor: Plus Jakarta Sans + Manrope */
+:root {
+  --font-sans: "Manrope", "Segoe UI", "Helvetica Neue", Arial, sans-serif;
+  --font-display: "Plus Jakarta Sans", "Manrope", "Segoe UI", Arial, sans-serif;
+}
+
+body,
+p,
+li,
+input,
+textarea,
+select,
+.product-card p,
+.product-listing .product-card p,
+.detail-specs,
+.contact-list,
+.site-footer,
+.footer-links,
+.form-note,
+.form-status {
+  font-family: var(--font-sans);
+  font-weight: 400;
+}
+
+.site-header .main-nav,
+.nav-item > a,
+.subnav a,
+.submenu a,
+.button,
+button,
+.site-tools a,
+.footer-links,
+.product-card p,
+.product-listing .product-card p,
+.contact-list .send-inquiry-button {
+  font-family: var(--font-sans);
+}
+
+.button,
+button,
+.contact-list .send-inquiry-button {
+  font-weight: 500;
+}
+
+.hero-content h1 {
+  font-family: var(--font-display);
+  font-weight: 700;
+}
+
+h1,
+h2,
+h3,
+.plain-page-title,
+.page-hero h1,
+.detail-info h1,
+.film-heading h2,
+.section-heading h1,
+.section-heading h2,
+.catalog-copy h2,
+.category-card-content h3,
+.factory-overview-grid h2,
+.production-group-copy h2,
+.customer-service-grid h3,
+.company-link-grid h3,
+.inquiry-item h3 {
+  font-family: var(--font-display);
+  font-weight: 600;
+}
+
+.product-card h3,
+.product-listing .product-card h3,
+.product-title-row h3,
+.product-title-row .product-model,
+.detail-info h1 {
+  font-family: var(--font-display);
+  font-weight: 600;
+}
+
+.product-price,
+.company-base-grid strong,
+.factory-overview-grid figcaption span,
+.production-group-copy > span,
+.stat-number,
+.metric-number,
+.number,
+strong {
+  font-family: var(--font-display);
+}
+.hero-content h1 {
+  font-family: var(--font-display);
+  font-weight: 700;
 }
