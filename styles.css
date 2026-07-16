@@ -1501,11 +1501,10 @@ strong {
   max-width: 1180px;
   margin: 0;
   font-family: var(--font-display);
-  font-size: clamp(30px, 4vw, 54px);
+  font-size: clamp(42px, 6vw, 78px);
   font-weight: 700;
   line-height: .98;
   letter-spacing: 0;
-  white-space: nowrap;
 }
 .inspiration-gallery {
   display: grid;
@@ -1514,28 +1513,11 @@ strong {
   padding: 0 7vw 84px;
 }
 .inspiration-card {
-  position: relative;
   margin: 0;
   overflow: hidden;
   border-radius: 14px;
   background: #fff;
   box-shadow: 0 14px 36px rgba(0,0,0,.08);
-}
-.inspiration-card .image-number {
-  position: absolute;
-  top: 12px;
-  right: 12px;
-  z-index: 1;
-  min-width: 42px;
-  padding: 7px 10px;
-  border-radius: 999px;
-  background: rgba(11,11,11,.82);
-  color: #fff;
-  font-family: var(--font-body);
-  font-size: 12px;
-  font-weight: 600;
-  line-height: 1;
-  text-align: center;
 }
 .inspiration-card img {
   width: 100%;
@@ -1547,6 +1529,5 @@ strong {
   .inspiration-gallery { grid-template-columns: repeat(2, minmax(0, 1fr)); }
 }
 @media (max-width: 560px) {
-  .inspiration-page .inspiration-hero h1 { white-space: normal; }
   .inspiration-gallery { grid-template-columns: 1fr; padding-right: 18px; padding-left: 18px; }
 }
