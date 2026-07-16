@@ -1494,3 +1494,40 @@ strong {
   font-family: var(--font-display);
   font-weight: 700;
 }
+.inspiration-page .inspiration-hero {
+  padding-bottom: 34px;
+}
+.inspiration-page .inspiration-hero h1 {
+  max-width: 1180px;
+  margin: 0;
+  font-family: var(--font-display);
+  font-size: clamp(42px, 6vw, 78px);
+  font-weight: 700;
+  line-height: .98;
+  letter-spacing: 0;
+}
+.inspiration-gallery {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 24px;
+  padding: 0 7vw 84px;
+}
+.inspiration-card {
+  margin: 0;
+  overflow: hidden;
+  border-radius: 14px;
+  background: #fff;
+  box-shadow: 0 14px 36px rgba(0,0,0,.08);
+}
+.inspiration-card img {
+  width: 100%;
+  aspect-ratio: 4 / 3;
+  object-fit: cover;
+  display: block;
+}
+@media (max-width: 900px) {
+  .inspiration-gallery { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+}
+@media (max-width: 560px) {
+  .inspiration-gallery { grid-template-columns: 1fr; padding-right: 18px; padding-left: 18px; }
+}
