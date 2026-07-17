@@ -1666,3 +1666,74 @@ strong {
   .inspiration-lightbox { width: 100vw; height: 100svh; border-radius: 0; }
   .inspiration-lightbox figure { padding: 58px 18px 24px; }
 }
+
+/* Product image zoom */
+.product-image-button {
+  display: block;
+  width: 100%;
+  overflow: hidden;
+  border: 0;
+  border-radius: var(--radius);
+  padding: 0;
+  background: transparent;
+  cursor: zoom-in;
+}
+.product-image-button img {
+  transition: transform .25s ease, box-shadow .22s ease, border-color .22s ease;
+}
+.product-image-button:hover img,
+.product-image-button:focus-visible img,
+.product-listing .product-card-static:hover .product-image-button img {
+  transform: scale(1.025);
+}
+.product-image-button:focus-visible { outline: 2px solid var(--ink); outline-offset: 3px; }
+.product-lightbox {
+  width: min(92vw, 1200px);
+  max-width: none;
+  height: min(90vh, 900px);
+  max-height: none;
+  border: 0;
+  border-radius: 14px;
+  padding: 0;
+  overflow: hidden;
+  background: #0b0b0b;
+}
+.product-lightbox::backdrop { background: rgba(0,0,0,.84); }
+.product-lightbox figure {
+  display: grid;
+  width: 100%;
+  height: 100%;
+  place-items: center;
+  margin: 0;
+  padding: 54px;
+}
+.product-lightbox figure img {
+  max-width: 100%;
+  max-height: 100%;
+  object-fit: contain;
+  background: #fff;
+}
+.product-lightbox-close {
+  position: absolute;
+  top: 12px;
+  right: 12px;
+  z-index: 2;
+  display: grid;
+  width: 44px;
+  height: 44px;
+  place-items: center;
+  border: 1px solid rgba(255,255,255,.24);
+  border-radius: 50%;
+  padding: 0;
+  background: rgba(0,0,0,.58);
+  color: #fff;
+  font-size: 28px;
+  line-height: 1;
+  cursor: pointer;
+}
+.product-lightbox-close:hover,
+.product-lightbox-close:focus-visible { background: #fff; color: var(--ink); }
+@media (max-width: 560px) {
+  .product-lightbox { width: 100vw; height: 100svh; border-radius: 0; }
+  .product-lightbox figure { padding: 58px 18px 24px; }
+}

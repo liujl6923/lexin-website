@@ -88,7 +88,9 @@ function formatPrice(value) {
 }
 function productCard(product) {
   return `<article class="product-card product-card-static">
-    <img src="${product.image}" alt="${product.model} ${product.categoryName}" loading="lazy">
+    <button class="product-image-button" type="button" aria-label="Enlarge ${product.model} product image">
+      <img src="${product.image}" alt="${product.model} ${product.categoryName}" loading="lazy">
+    </button>
     <div class="product-card-body"><span class="material-tag">${product.material}</span><div class="product-title-row"><h3>${product.model}</h3><strong class="product-price">${formatPrice(product.price)}</strong></div><p>${product.spec}</p></div>
   </article>`;
 }
@@ -99,6 +101,29 @@ function initCatalog() {
   if (!grid || !category) return;
   const visible = category === "all" ? products : [];
   grid.innerHTML = visible.map(productCard).join("");
+}
+
+function initProductImageLightbox() {
+  const buttons = [...document.querySelectorAll(".product-image-button")];
+  if (!buttons.length) return;
+
+  const dialog = document.createElement("dialog");
+  dialog.className = "product-lightbox";
+  dialog.setAttribute("aria-label", "Product image preview");
+  dialog.innerHTML = `<button class="product-lightbox-close" type="button" aria-label="Close product image">&times;</button><figure><img alt=""></figure>`;
+  document.body.appendChild(dialog);
+
+  const previewImage = dialog.querySelector("img");
+  buttons.forEach((button) => button.addEventListener("click", () => {
+    const source = button.querySelector("img");
+    previewImage.src = source.currentSrc || source.src;
+    previewImage.alt = source.alt;
+    dialog.showModal();
+  }));
+  dialog.querySelector(".product-lightbox-close").addEventListener("click", () => dialog.close());
+  dialog.addEventListener("click", (event) => {
+    if (event.target === dialog) dialog.close();
+  });
 }
 
 function initProductDetail() {
@@ -281,6 +306,7 @@ initNavigation();
 initSlider();
 initCatalog();
 initProductDetail();
+initProductImageLightbox();
 initInquiryPage();
 initAccountPage();
 initContactForm();
