@@ -213,6 +213,70 @@ function initGallery() {
     if (event.key === "ArrowRight") show(current + 1);
   });
 }
+
+function initInspirationGallery() {
+  const gallery = document.querySelector("#inspirationGallery");
+  const pagination = document.querySelector("#inspirationPagination");
+  const dialog = document.querySelector("#inspirationLightbox");
+  const dialogImage = document.querySelector("#inspirationLightboxImage");
+  const dialogNumber = document.querySelector("#inspirationLightboxNumber");
+  if (!gallery || !pagination || !dialog || !dialogImage || !dialogNumber) return;
+
+  const total = Number.parseInt(gallery.dataset.total, 10);
+  const pageSize = Number.parseInt(gallery.dataset.pageSize, 10);
+  const totalPages = Math.ceil(total / pageSize);
+  const requestedPage = Number.parseInt(new URLSearchParams(window.location.search).get("page") || "1", 10);
+  const currentPage = Number.isInteger(requestedPage) ? Math.min(Math.max(requestedPage, 1), totalPages) : 1;
+  const start = ((currentPage - 1) * pageSize) + 1;
+  const end = Math.min(start + pageSize - 1, total);
+  const fragment = document.createDocumentFragment();
+
+  for (let number = start; number <= end; number += 1) {
+    const label = String(number).padStart(3, "0");
+    const card = document.createElement("button");
+    card.className = "inspiration-card";
+    card.type = "button";
+    card.dataset.number = label;
+    card.setAttribute("aria-label", `Enlarge inspiration image ${label}`);
+    card.innerHTML = `<span class="image-number">${label}</span><img src="assets/images/inspiration/inspiration-${label}.jpg" loading="lazy" decoding="async" alt="Furniture inspiration with metal base">`;
+    card.addEventListener("click", () => {
+      const source = card.querySelector("img");
+      dialogImage.src = source.src;
+      dialogImage.alt = source.alt;
+      dialogNumber.textContent = label;
+      dialog.showModal();
+    });
+    fragment.appendChild(card);
+  }
+  gallery.appendChild(fragment);
+
+  const pageHref = (page) => page === 1 ? "gallery.html#inspirationGallery" : `gallery.html?page=${page}#inspirationGallery`;
+  const addPageLink = (label, page, disabled = false) => {
+    if (disabled) {
+      const span = document.createElement("span");
+      span.className = "inspiration-page-link disabled";
+      span.textContent = label;
+      pagination.appendChild(span);
+      return;
+    }
+    const link = document.createElement("a");
+    link.className = "inspiration-page-link";
+    link.href = pageHref(page);
+    link.textContent = label;
+    if (page === currentPage && Number.isInteger(label)) link.setAttribute("aria-current", "page");
+    pagination.appendChild(link);
+  };
+
+  addPageLink("Previous", currentPage - 1, currentPage === 1);
+  for (let page = 1; page <= totalPages; page += 1) addPageLink(page, page);
+  addPageLink("Next", currentPage + 1, currentPage === totalPages);
+
+  dialog.querySelector(".inspiration-lightbox-close").addEventListener("click", () => dialog.close());
+  dialog.addEventListener("click", (event) => {
+    if (event.target === dialog) dialog.close();
+  });
+}
+
 function initContactForm() {
   const form = document.querySelector("#inquiryForm");
   if (!form) return;
@@ -238,4 +302,5 @@ initInquiryPage();
 initAccountPage();
 initContactForm();
 initGallery();
+initInspirationGallery();
 document.querySelectorAll("[data-year]").forEach((item) => { item.textContent = new Date().getFullYear(); });
