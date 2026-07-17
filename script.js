@@ -1,30 +1,13 @@
-const products = [
-  { model:"LX1001", category:"sofa", categoryName:"Sofa Legs", material:"Aluminum", spec:"D40*D39*H151-M8*35", price:1, image:"assets/products/lx1001.png" },
-  { model:"LX1012", category:"sofa", categoryName:"Sofa Legs", material:"Aluminum", spec:"D52*H190-M8*25", price:1, image:"assets/products/lx1012.png" },
-  { model:"LX2003", category:"sofa", categoryName:"Sofa Legs", material:"Aluminum", spec:"D35*110-170*M8*30", price:1, image:"assets/products/lx2003.png" },
-  { model:"LX2013", category:"sofa", categoryName:"Sofa Legs", material:"Steel", spec:"D35*H110-M8*32", price:1, image:"assets/products/lx2013.png" },
-  { model:"LX1107", category:"sofa", categoryName:"Sofa Legs", material:"Aluminum", spec:"D27*D78*H150", price:1, image:"assets/products/lx1107.png" },
-  { model:"LX1801", category:"sofa", categoryName:"Sofa Legs", material:"Aluminum", spec:"L90*W75.8*H180", price:1, image:"assets/products/lx1801.png" },
-  { model:"LX1812", category:"sofa", categoryName:"Sofa Legs", material:"Aluminum", spec:"L136*W89*H170", price:1, image:"assets/products/lx1812.png" },
-  { model:"LX1814", category:"sofa", categoryName:"Sofa Legs", material:"Stainless steel 201", spec:"L106*W55*H120/320", price:1, image:"assets/products/lx1814.png" },
-  { model:"LX1802-CA", category:"sofa", categoryName:"Sofa Legs", material:"Steel", spec:"L80*W90*H140/H260-D25", price:1, image:"assets/products/lx1802-ca.png" },
-  { model:"LX1804", category:"sofa", categoryName:"Sofa Legs", material:"Steel", spec:"L60*W60*H180", price:1, image:"assets/products/lx1804.png" },
-  { model:"LX3005", category:"sofa", categoryName:"Sofa Legs", material:"Aluminum", spec:"L140*W140*H150", price:1, image:"assets/products/lx3005.png" },
-  { model:"LX3006", category:"sofa", categoryName:"Sofa Legs", material:"Aluminum", spec:"L89*W89*H196", price:1, image:"assets/products/lx3006.png" },
-  { model:"LX9201", category:"bed", categoryName:"Bed Frames", material:"Steel", spec:"L930*W60*H115", price:1, image:"assets/products/bed/lx9201.jpg" },
-  { model:"LX9512", category:"bed", categoryName:"Bed Frames", material:"Aluminum", spec:"L900*W90*H180", price:1, image:"assets/products/bed/lx9512.jpg" },
-  { model:"LX9209", category:"bed", categoryName:"Bed Frames", material:"Steel", spec:"L866*W80*H140-T8", price:1, image:"assets/products/bed/lx9209.jpg" },
-  { model:"LX9513", category:"bed", categoryName:"Bed Frames", material:"Aluminum", spec:"L920*W60*H140", price:1, image:"assets/products/bed/lx9513.jpg" },
-  { model:"LX9210", category:"bed", categoryName:"Bed Frames", material:"Steel", spec:"L900*W100*H105", price:1, image:"assets/products/bed/lx9210.jpg" },
-  { model:"LX9514", category:"bed", categoryName:"Bed Frames", material:"Aluminum", spec:"L860*W85*H160", price:1, image:"assets/products/bed/lx9514.jpg" },
-  { model:"LXB488", category:"table", categoryName:"Table Legs", material:"Aluminum", spec:"H725", price:1, image:"assets/products/table/lxb488.jpg" },
-  { model:"LXB499", category:"table", categoryName:"Table Legs", material:"Aluminum", spec:"H735", price:1, image:"assets/products/table/lxb499.jpg" },
-  { model:"LX9401", category:"chair", categoryName:"Armchair Bases", material:"Steel", spec:"L740*H200", price:1, image:"assets/products/chair/lx9401.jpg" },
-  { model:"LX9412", category:"chair", categoryName:"Armchair Bases", material:"Steel", spec:"L788*H200", price:1, image:"assets/products/chair/lx9412.jpg" },
-  { model:"LXS045", category:"chair", categoryName:"Armchair Bases", material:"Steel", spec:"Customizable", price:1, image:"assets/products/chair/lxs045.jpg" },
-  { model:"LXS008", category:"chair", categoryName:"Armchair Bases", material:"Steel", spec:"700*700*215", price:1, image:"assets/products/chair/lxs008.jpg" },
-  { model:"LXS026", category:"chair", categoryName:"Armchair Bases", material:"Steel", spec:"D755*T250*H220", price:1, image:"assets/products/chair/lxs026.jpg" },
-];
+const products = Array.isArray(window.allCatalogProducts)
+  ? window.allCatalogProducts.map((product) => ({
+      ...product,
+      category: "all",
+      categoryName: "All Products",
+      spec: product.size ?? product.spec ?? "",
+      price: 1,
+      catalogOnly: true,
+    }))
+  : [];
 
 const categoryPages = { sofa:"sofa-legs.html", bed:"bed-frames.html", table:"table-legs.html", chair:"chair-bases.html", cabinet:"cabinet-handles.html" };
 const inquiryStorageKey = "lexinInquiryList";
@@ -104,19 +87,18 @@ function formatPrice(value) {
   return usdFormatter.format(Number(value));
 }
 function productCard(product) {
-  return `<a class="product-card" href="product-detail.html?model=${encodeURIComponent(product.model)}">
+  return `<article class="product-card product-card-static">
     <img src="${product.image}" alt="${product.model} ${product.categoryName}" loading="lazy">
     <div class="product-card-body"><span class="material-tag">${product.material}</span><div class="product-title-row"><h3>${product.model}</h3><strong class="product-price">${formatPrice(product.price)}</strong></div><p>${product.spec}</p></div>
-  </a>`;
+  </article>`;
 }
 
 function initCatalog() {
   const grid = document.querySelector("#productGrid");
   const category = document.body.dataset.category;
   if (!grid || !category) return;
-  const visible = category === "all" ? products : products.filter((product) => product.category === category);
-  if (category === "cabinet") { grid.innerHTML = ""; return; }
-  grid.innerHTML = visible.length ? visible.map(productCard).join("") : '<p class="empty-state">No products are available in this category.</p>';
+  const visible = category === "all" ? products : [];
+  grid.innerHTML = visible.map(productCard).join("");
 }
 
 function initProductDetail() {
@@ -124,6 +106,7 @@ function initProductDetail() {
   if (!root) return;
   const model = new URLSearchParams(window.location.search).get("model") || "LX1001";
   const product = products.find((item) => item.model.toLowerCase() === model.toLowerCase()) || products[0];
+  if (!product) { root.innerHTML = ""; return; }
   document.title = `${product.model} | ${product.categoryName} | LEXIN METAL`;
   document.querySelector("#detailImage").src = product.image;
   document.querySelector("#detailImage").alt = `${product.model} ${product.categoryName}`;
