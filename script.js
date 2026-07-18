@@ -86,9 +86,11 @@ const usdFormatter = new Intl.NumberFormat("en-US", {
 function formatPrice(value) {
   return usdFormatter.format(Number(value));
 }
-function productCard(product) {
+function productCard(product, sequence) {
+  const sequenceLabel = String(sequence).padStart(3, "0");
   return `<article class="product-card product-card-static">
     <button class="product-image-button" type="button" aria-label="Enlarge ${product.model} product image">
+      <span class="product-sequence">${sequenceLabel}</span>
       <img src="${product.image}" alt="${product.model} ${product.categoryName}" loading="lazy">
     </button>
     <div class="product-card-body"><span class="material-tag">${product.material}</span><div class="product-title-row"><h3>${product.model}</h3><strong class="product-price">${formatPrice(product.price)}</strong></div><p>${product.spec}</p></div>
@@ -100,7 +102,38 @@ function initCatalog() {
   const category = document.body.dataset.category;
   if (!grid || !category) return;
   const visible = category === "all" ? products : [];
-  grid.innerHTML = visible.map(productCard).join("");
+  const pageSize = 210;
+  const totalPages = Math.max(1, Math.ceil(visible.length / pageSize));
+  const requestedPage = Number(new URLSearchParams(window.location.search).get("page")) || 1;
+  const currentPage = Math.min(Math.max(requestedPage, 1), totalPages);
+  const startIndex = (currentPage - 1) * pageSize;
+  const pageProducts = visible.slice(startIndex, startIndex + pageSize);
+  grid.innerHTML = pageProducts.map((product, index) => productCard(product, startIndex + index + 1)).join("");
+
+  if (visible.length <= pageSize) return;
+  const pagination = document.createElement("nav");
+  pagination.className = "inspiration-pagination product-pagination";
+  pagination.setAttribute("aria-label", "Product pages");
+  const pageHref = (page) => page === 1 ? "products.html#productGrid" : `products.html?page=${page}#productGrid`;
+  const addPageLink = (label, page, disabled = false) => {
+    if (disabled) {
+      const span = document.createElement("span");
+      span.className = "inspiration-page-link disabled";
+      span.textContent = label;
+      pagination.appendChild(span);
+      return;
+    }
+    const link = document.createElement("a");
+    link.className = "inspiration-page-link";
+    link.href = pageHref(page);
+    link.textContent = label;
+    if (page === currentPage && Number.isInteger(label)) link.setAttribute("aria-current", "page");
+    pagination.appendChild(link);
+  };
+  addPageLink("Previous", currentPage - 1, currentPage === 1);
+  for (let page = 1; page <= totalPages; page += 1) addPageLink(page, page);
+  addPageLink("Next", currentPage + 1, currentPage === totalPages);
+  grid.insertAdjacentElement("afterend", pagination);
 }
 
 function initProductImageLightbox() {

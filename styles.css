@@ -1669,6 +1669,7 @@ strong {
 
 /* Product image zoom */
 .product-image-button {
+  position: relative;
   display: block;
   width: 100%;
   overflow: hidden;
@@ -1678,6 +1679,24 @@ strong {
   background: transparent;
   cursor: zoom-in;
 }
+.product-sequence {
+  position: absolute;
+  top: 12px;
+  left: 12px;
+  z-index: 2;
+  min-width: 42px;
+  padding: 7px 10px;
+  border-radius: 999px;
+  background: rgba(11,11,11,.82);
+  color: #fff;
+  font-family: var(--font-sans);
+  font-size: 12px;
+  font-weight: 600;
+  line-height: 1;
+  text-align: center;
+  pointer-events: none;
+}
+.product-pagination { padding: 40px 0 0; }
 .product-image-button img {
   transition: transform .25s ease, box-shadow .22s ease, border-color .22s ease;
 }
