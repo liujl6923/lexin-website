@@ -89,10 +89,12 @@ function formatPrice(value) {
 function productCard(product, sequence) {
   const sequenceLabel = String(sequence).padStart(3, "0");
   return `<article class="product-card product-card-static">
-    <button class="product-image-button" type="button" aria-label="Enlarge ${product.model} product image">
+    <div class="product-image-frame">
+      <button class="product-image-button" type="button" aria-label="Enlarge ${product.model} product image">
+        <img src="${product.image}" alt="${product.model} ${product.categoryName}" loading="lazy">
+      </button>
       <span class="product-sequence">${sequenceLabel}</span>
-      <img src="${product.image}" alt="${product.model} ${product.categoryName}" loading="lazy">
-    </button>
+    </div>
     <div class="product-card-body"><span class="material-tag">${product.material}</span><div class="product-title-row"><h3>${product.model}</h3><strong class="product-price">${formatPrice(product.price)}</strong></div><p>${product.spec}</p></div>
   </article>`;
 }
@@ -102,7 +104,7 @@ function initCatalog() {
   const category = document.body.dataset.category;
   if (!grid || !category) return;
   const visible = category === "all" ? products : [];
-  const pageSize = 210;
+  const pageSize = 200;
   const totalPages = Math.max(1, Math.ceil(visible.length / pageSize));
   const requestedPage = Number(new URLSearchParams(window.location.search).get("page")) || 1;
   const currentPage = Math.min(Math.max(requestedPage, 1), totalPages);

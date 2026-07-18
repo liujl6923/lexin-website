@@ -1668,8 +1668,12 @@ strong {
 }
 
 /* Product image zoom */
-.product-image-button {
+.product-image-frame {
   position: relative;
+  overflow: hidden;
+  border-radius: var(--radius);
+}
+.product-image-button {
   display: block;
   width: 100%;
   overflow: hidden;
