@@ -258,7 +258,7 @@ function initInspirationGallery() {
   }
   gallery.appendChild(fragment);
 
-  const pageHref = (page) => page === 1 ? "gallery.html#inspirationGallery" : `gallery.html?page=${page}#inspirationGallery`;
+  const pageHref = (page) => page === 1 ? "inspiration.html#inspirationGallery" : `inspiration.html?page=${page}#inspirationGallery`;
   const addPageLink = (label, page, disabled = false) => {
     if (disabled) {
       const span = document.createElement("span");
