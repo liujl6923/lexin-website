@@ -267,6 +267,7 @@ function initInspirationGallery() {
 
   const total = Number.parseInt(gallery.dataset.total, 10);
   const pageSize = Number.parseInt(gallery.dataset.pageSize, 10);
+  const excludedNumbers = new Set([3707, 3708, 3709, 3710]);
   const totalPages = Math.ceil(total / pageSize);
   const requestedPage = Number.parseInt(new URLSearchParams(window.location.search).get("page") || "1", 10);
   const currentPage = Number.isInteger(requestedPage) ? Math.min(Math.max(requestedPage, 1), totalPages) : 1;
@@ -275,6 +276,7 @@ function initInspirationGallery() {
   const fragment = document.createDocumentFragment();
 
   for (let number = start; number <= end; number += 1) {
+    if (excludedNumbers.has(number)) continue;
     const label = String(number).padStart(3, "0");
     const card = document.createElement("button");
     card.className = "inspiration-card";
