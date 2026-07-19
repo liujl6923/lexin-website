@@ -1,11 +1,19 @@
+const siteBase = document.body.dataset.siteBase || "";
+const isStaffView = document.body.dataset.staffView === "true";
+const contentVisibility = window.lexinContentVisibility || {};
+const staffOnlyInspiration = new Set((contentVisibility.inspirationStaffOnly || []).map((number) => String(number).padStart(3, "0")));
+const staffOnlyProducts = new Set((contentVisibility.productStaffOnly || []).map((model) => String(model).toUpperCase()));
+
 const products = Array.isArray(window.allCatalogProducts)
   ? window.allCatalogProducts.map((product) => ({
       ...product,
+      image: `${siteBase}${product.image}`,
       category: "all",
       categoryName: "All Products",
       spec: product.size ?? product.spec ?? "",
       price: 1,
       catalogOnly: true,
+      staffOnly: staffOnlyProducts.has(String(product.model).toUpperCase()),
     }))
   : [];
 
@@ -32,10 +40,12 @@ function initUtilityNav() {
   if (!header || header.querySelector(".site-tools")) return;
   const tools = document.createElement("nav");
   tools.className = "site-tools";
-  tools.setAttribute("aria-label", "Account and inquiry");
-  tools.innerHTML = '<a href="account.html">Log in</a><a href="inquiry.html">Inquiry <span class="inquiry-count">0</span></a>';
+  tools.setAttribute("aria-label", isStaffView ? "Staff session" : "Account and inquiry");
+  tools.innerHTML = isStaffView
+    ? `<span class="staff-mode-label">LEXIN Staff</span><a href="${siteBase}index.html">Public Site</a><a href="/cdn-cgi/access/logout">Log out</a>`
+    : '<a href="account.html">Log in</a><a href="staff/index.html">Staff Login</a><a href="inquiry.html">Inquiry <span class="inquiry-count">0</span></a>';
   header.append(tools);
-  updateInquiryCount();
+  if (!isStaffView) updateInquiryCount();
 }
 
 function initNavigation() {
@@ -94,6 +104,7 @@ function productCard(product, sequence) {
         <img src="${product.image}" alt="${product.model} ${product.categoryName}" loading="lazy">
       </button>
       <span class="product-sequence">${sequenceLabel}</span>
+      ${isStaffView && product.staffOnly ? '<span class="staff-only-badge">Only for LEXIN Staff</span>' : ''}
     </div>
     <div class="product-card-body"><span class="material-tag">${product.material}</span><div class="product-title-row"><h3>${product.model}</h3><strong class="product-price">${formatPrice(product.price)}</strong></div><p>${product.spec}</p></div>
   </article>`;
@@ -103,7 +114,7 @@ function initCatalog() {
   const grid = document.querySelector("#productGrid");
   const category = document.body.dataset.category;
   if (!grid || !category) return;
-  const visible = category === "all" ? products : [];
+  const visible = category === "all" ? products.filter((product) => isStaffView || !product.staffOnly) : [];
   const pageSize = 200;
   const totalPages = Math.max(1, Math.ceil(visible.length / pageSize));
   const requestedPage = Number(new URLSearchParams(window.location.search).get("page")) || 1;
@@ -267,7 +278,6 @@ function initInspirationGallery() {
 
   const total = Number.parseInt(gallery.dataset.total, 10);
   const pageSize = Number.parseInt(gallery.dataset.pageSize, 10);
-  const excludedNumbers = new Set([3707, 3708, 3709, 3710]);
   const totalPages = Math.ceil(total / pageSize);
   const requestedPage = Number.parseInt(new URLSearchParams(window.location.search).get("page") || "1", 10);
   const currentPage = Number.isInteger(requestedPage) ? Math.min(Math.max(requestedPage, 1), totalPages) : 1;
@@ -276,14 +286,15 @@ function initInspirationGallery() {
   const fragment = document.createDocumentFragment();
 
   for (let number = start; number <= end; number += 1) {
-    if (excludedNumbers.has(number)) continue;
     const label = String(number).padStart(3, "0");
+    const staffOnly = staffOnlyInspiration.has(label);
+    if (!isStaffView && staffOnly) continue;
     const card = document.createElement("button");
-    card.className = "inspiration-card";
+    card.className = `inspiration-card${staffOnly ? " is-staff-only" : ""}`;
     card.type = "button";
     card.dataset.number = label;
     card.setAttribute("aria-label", `Enlarge inspiration image ${label}`);
-    card.innerHTML = `<span class="image-number">${label}</span><img src="assets/images/inspiration/inspiration-${label}.jpg" loading="lazy" decoding="async" alt="Furniture inspiration with metal base">`;
+    card.innerHTML = `<span class="image-number">${label}</span>${isStaffView && staffOnly ? '<span class="staff-only-badge">Only for LEXIN Staff</span>' : ''}<img src="${siteBase}assets/images/inspiration/inspiration-${label}.jpg" loading="lazy" decoding="async" alt="Furniture inspiration with metal base">`;
     card.addEventListener("click", () => {
       const source = card.querySelector("img");
       dialogImage.src = source.src;
