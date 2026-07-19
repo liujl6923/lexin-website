@@ -40,10 +40,10 @@ function initUtilityNav() {
   if (!header || header.querySelector(".site-tools")) return;
   const tools = document.createElement("nav");
   tools.className = "site-tools";
-  tools.setAttribute("aria-label", isStaffView ? "Staff session" : "Account and inquiry");
+  tools.setAttribute("aria-label", isStaffView ? "Staff session" : "Staff access and inquiry");
   tools.innerHTML = isStaffView
     ? `<span class="staff-mode-label">LEXIN Staff</span><a href="${siteBase}index.html">Public Site</a><a href="/cdn-cgi/access/logout">Log out</a>`
-    : '<a href="account.html">Log in</a><a href="staff/index.html">Staff Login</a><a href="inquiry.html">Inquiry <span class="inquiry-count">0</span></a>';
+    : '<a href="staff/index.html">STAFF</a><a href="inquiry.html">Inquiry <span class="inquiry-count">0</span></a>';
   header.append(tools);
   if (!isStaffView) updateInquiryCount();
 }
@@ -98,6 +98,14 @@ function formatPrice(value) {
 }
 function productCard(product, sequence) {
   const sequenceLabel = String(sequence).padStart(3, "0");
+  if (!isStaffView && product.staffOnly) {
+    return `<article class="product-card product-card-static product-card-staff-placeholder">
+      <div class="product-image-frame">
+        <span class="product-sequence">${sequenceLabel}</span>
+        <span class="staff-placeholder-label">ONLY FOR STAFF</span>
+      </div>
+    </article>`;
+  }
   return `<article class="product-card product-card-static">
     <div class="product-image-frame">
       <button class="product-image-button" type="button" aria-label="Enlarge ${product.model} product image">
@@ -114,7 +122,7 @@ function initCatalog() {
   const grid = document.querySelector("#productGrid");
   const category = document.body.dataset.category;
   if (!grid || !category) return;
-  const visible = category === "all" ? products.filter((product) => isStaffView || !product.staffOnly) : [];
+  const visible = category === "all" ? products : [];
   const pageSize = 200;
   const totalPages = Math.max(1, Math.ceil(visible.length / pageSize));
   const requestedPage = Number(new URLSearchParams(window.location.search).get("page")) || 1;
@@ -288,7 +296,14 @@ function initInspirationGallery() {
   for (let number = start; number <= end; number += 1) {
     const label = String(number).padStart(3, "0");
     const staffOnly = staffOnlyInspiration.has(label);
-    if (!isStaffView && staffOnly) continue;
+    if (!isStaffView && staffOnly) {
+      const placeholder = document.createElement("div");
+      placeholder.className = "inspiration-card inspiration-card-staff-placeholder";
+      placeholder.dataset.number = label;
+      placeholder.innerHTML = `<span class="image-number">${label}</span><span class="staff-placeholder-label">ONLY FOR STAFF</span>`;
+      fragment.appendChild(placeholder);
+      continue;
+    }
     const card = document.createElement("button");
     card.className = `inspiration-card${staffOnly ? " is-staff-only" : ""}`;
     card.type = "button";
